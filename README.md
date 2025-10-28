@@ -1,70 +1,140 @@
-# Getting Started with Create React App
+# Case Study Objective: (React.js)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This React web app displays a PDF file (Maersk Q2 2025 Interim Report.pdf) on the left and an analysis panel on the right.
+When you click reference [3] in the analysis section, the app automatically highlights the phrase
+"Gain on sale of non-current assets, etc" in the PDF in bright yellow.
 
-## Available Scripts
+<img width="1910" height="966" alt="Screenshot 2025-10-28 230010" src="https://github.com/user-attachments/assets/82f40fa5-56bb-430c-b0cb-73abed19bd64" />
 
-In the project directory, you can run:
+## Tech Stack
 
-### `npm start`
+1. React.js – for UI
+2. react-pdf – for rendering PDF documents
+3. JavaScript (ES6) – for highlight logic
+4. CSS – for layout and visuals
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Project Setup
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Create the React App
+npx create-react-app maersk-case-study
+cd maersk-case-study
 
-### `npm test`
+2. Install Dependencies
+npm install react-pdf pdfjs-dist
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. Add the PDF File
+Copy your Maersk Q2 2025 Interim Report.pdf into the /public folder:
 
-### `npm run build`
+- public/Maersk Q2 2025 Interim Report.pdf
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. Add Project Files
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+5. Inside the /src folder:
+- Create a components folder for UI parts.
+- Create a core folder for logic handling.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Folder Structure
 
-### `npm run eject`
+```
+maersk-case-study/
+│
+├── public/
+│   ├── Maersk Q2 2025 Interim Report.pdf     # The PDF file displayed in the app
+│   └── index.html
+│
+├── src/
+│   ├── components/
+│   │   ├── PDFViewer.jsx                     # Renders PDF and handles highlighting
+│   │   └── AnalysisPanel.jsx                 # Displays analysis text and handles [3] click
+│   │
+│   ├── core/
+│   │   └── CaseStudyManager.js               # Manages highlight activation/deactivation
+        └── PDFHighlighter.js
+│   │
+│   ├── App.js                                # Combines PDFViewer and AnalysisPanel
+│   ├── App.css                               # Styles layout, highlight colors, and panels
+│   ├── index.js
+│   └── reportWebVitals.js
+│
+├── package.json
+└── README.md
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Component Overview
+1. PDFViewer.jsx
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Displays the PDF using react-pdf.
+Watches for a signal from CaseStudyManager.
+When [3] is clicked, it finds and highlights
+“Gain on sale of non-current assets, etc” in yellow within the text layer.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. CaseStudyManager.js
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Handles shared app logic for activating or clearing highlights.
+Uses a subscriber pattern to notify PDFViewer when a highlight should be applied.
 
-## Learn More
+3. AnalysisPanel.jsx
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Shows the “Analysis” paragraph.
+When [3] is clicked:
+Activates the highlight state via CaseStudyManager.
+Smoothly scrolls the PDF to the section containing the target phrase.
+“Clear Highlight” resets the state and removes yellow highlights.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+4. PDFHighlighter.js
 
-### Code Splitting
+Takes a target phrase (like "Gain on sale of non-current assets, etc")
+Normalizes the text for matching (ignoring dashes, spaces, capitalization)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+5. App.css
 
-### Analyzing the Bundle Size
+Defines clean two-column layout.
+Ensures highlighted text appears bright yellow and on top of the PDF layer.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Run the App
+```
+npm start
+```
+Then open your browser at:
+http://localhost:3000
 
-### Making a Progressive Web App
+# How It Works
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1. The app loads the Maersk PDF on the left.
+2. The right side shows your analysis text.
+3. When you click reference [3], it:
+4. Tells the PDFViewer to find "Gain on sale of non-current assets, etc".
+5. Highlights the matching text in yellow inside the PDF.
+6. Scrolls to that section.
+7. Clicking Clear Highlight removes the yellow mark.
+   
+### Future Enhancements
 
-### Advanced Configuration
+Here’s a quick roadmap for extending the project:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+1. Docker Integration (Planned)
 
-### Deployment
+Containerize the app using a multi-stage Dockerfile:
+- Stage 1: Build React app (npm run build)
+- Stage 2: Serve static files using Nginx
+Enables consistent deployment across environments.
+Future folder: /docker/ for Dockerfile and compose configuration.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+2. Dynamic Phrase Highlighting
 
-### `npm run build` fails to minify
+- Allow multiple reference tags [1], [2], [3] to trigger different phrases.
+- Support for multi-word and partial matching across PDF pages.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+3. Backend Integration (Optional)
+
+Add an Express or FastAPI backend to fetch real financial data dynamically.
+Enable cloud PDF fetching and caching.
+
+4. Responsive Layout
+
+Improve mobile and tablet layout for better readability.
+
+### Author
+
+**Neha Jagtap**  
+**Software Development Engineer** 
