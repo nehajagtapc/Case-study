@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import PDFViewer from "./components/PDFViewer";
+import AnalysisPanel from "./components/AnalysisPanel";
+import CaseStudyManager from "./core/CaseStudyManager";  // fixed import
+import "./App.css";
 
-function App() {
+const App = () => {
+  const caseStudyManager = new CaseStudyManager();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container">
+      <div className="pdf-section">
+        <PDFViewer caseStudyManager={caseStudyManager} />
+      </div>
+      <div className="analysis-section">
+        <AnalysisPanel caseStudyManager={caseStudyManager} />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
